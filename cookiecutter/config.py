@@ -52,7 +52,7 @@ def merge_configs(default, overwrite):
         # Make sure to preserve existing items in
         # nested dicts, for example `abbreviations`
         if isinstance(v, dict):
-            new_config[k] = merge_configs(default[k], v)
+            new_config[k] = merge_configs(default.setdefault(k, collections.OrderedDict([])), v)
         else:
             new_config[k] = v
 

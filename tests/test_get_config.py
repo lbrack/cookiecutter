@@ -118,3 +118,38 @@ def test_get_config_with_defaults():
         }
     }
     assert conf == expected_conf
+
+def test_get_config_with_nested_struct_defaults():
+    """
+    A config file that overrides 1 of 3 defaults
+
+    Verifies that if defaults have nested structure, the resulting configuration does contain the nested elements.
+
+    see issue #1149 for additional details.
+
+    """
+    conf = config.get_config('tests/test-config/config-nested-structures.yaml')
+    default_cookiecutters_dir = os.path.expanduser('~/.cookiecutters/')
+    default_replay_dir = os.path.expanduser('~/.cookiecutter_replay/')
+    expected_conf = {
+        'cookiecutters_dir': default_cookiecutters_dir,
+        'replay_dir': default_replay_dir,
+        'default_context': {
+            'full_name': 'Firstname Lastname',
+            'email': 'firstname.lastname@gmail.com',
+            'github_username': 'example',
+            'nested_level_1': {
+               'option_1': "value 1",
+               'choice_1': ['choice A','choice B'],
+               'nested_level_2': {
+                   'option_2': 'value 2',
+               },
+            },
+        },
+        'abbreviations': {
+            'gh': 'https://github.com/{0}.git',
+            'gl': 'https://gitlab.com/{0}.git',
+            'bb': 'https://bitbucket.org/{0}',
+        }
+    }
+    assert conf == expected_conf
